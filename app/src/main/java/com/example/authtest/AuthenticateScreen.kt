@@ -46,11 +46,9 @@ import androidx.lifecycle.ViewModel
 import com.example.authtest.data.model.UserState
 
 @Composable
-fun AuthenticateScreen(modifier: Modifier = Modifier,
-                        vm: SupabaseAuthViewModel = ViewModel()
-){
+fun AuthenticateScreen(modifier: Modifier = Modifier){
 
-
+    val vm:SupabaseAuthViewModel = SupabaseAuthViewModel()
     val ctx = LocalContext.current
     val userState by vm._userState
     LaunchedEffect(Unit) {
