@@ -17,11 +17,13 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,12 +42,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import com.example.authtest.data.model.UserState
 
 @Composable
-fun AuthenticateScreen(modifier: Modifier = Modifier){
+fun AuthenticateScreen(modifier: Modifier = Modifier,
+                        vm: SupabaseAuthViewModel = viewModel()
+){
 
-    val vm: SupabaseAuthViewModel = SupabaseAuthViewModel()
-    val ctx = LocalContext
+
+    val ctx = LocalContext.current
+    val userState by vm._userState
+    LaunchedEffect(Unit) {
+        vm.isUserLoggedIn(ctx)
+    }
+    var message by remember {
+        mutableStateOf("")
+    }
 
     Box(
         modifier = modifier
@@ -63,7 +76,12 @@ fun AuthenticateScreen(modifier: Modifier = Modifier){
         var password by remember{
             mutableStateOf("")
         }
+
+
         val showPassword = remember { mutableStateOf(false) }
+
+
+
         Column{
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -116,9 +134,31 @@ fun AuthenticateScreen(modifier: Modifier = Modifier){
                 }
             )
             Spacer(modifier = Modifier.height(20.dp))
-            Button(onClick = { vm.setUpEmailPassword(username, password)
-                             }, modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))) {
+            Button(onClick = { vm.signUp(context = ctx, userEmail = username, userPassword = password)
+                             }, modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))) {
                 Text(text = "Submit")
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            
+
+            when(userState){
+                is UserState.Loading ->{
+                    Text(text = "Loading")
+                }
+
+                is UserState.Success -> {
+                    val msg = (userState as UserState.Success).msg
+                    message = msg
+                }
+                is UserState.Failure -> {
+                    val msg = (userState as UserState.Failure).msg
+                    message = msg
+                }
+            }
+            if(message.isNotEmpty()){
+                Text(text = message)
             }
 
         }
