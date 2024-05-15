@@ -47,7 +47,7 @@ import com.example.authtest.data.model.UserState
 
 @Composable
 fun AuthenticateScreen(modifier: Modifier = Modifier,
-                        vm: SupabaseAuthViewModel = viewModel()
+                        vm: SupabaseAuthViewModel = ViewModel()
 ){
 
 
