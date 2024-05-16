@@ -53,6 +53,7 @@ fun AuthenticateScreen(modifier: Modifier = Modifier){
     val userState by vm._userState
     LaunchedEffect(Unit) {
         vm.isUserLoggedIn(ctx)
+
     }
     var message by remember {
         mutableStateOf("")
