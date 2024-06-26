@@ -74,4 +74,5 @@ dependencies {
 
     implementation("io.ktor:ktor-client-android:2.3.10")
     implementation("io.github.jan-tennert.supabase:gotrue-kt:1.3.2")
+    implementation("io.github.jan-tennert.supabase:realtime-kt:2.5.0")
 }
